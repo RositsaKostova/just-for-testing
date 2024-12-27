@@ -17,30 +17,53 @@ jobs:
       - name: Run Flake8 checks
         run: flake8 src/app_test.py
 
+  Flake8Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install flake8
+        run:  pip install flake8
+        
+      - name : Check code with Flake8
+        run: flake8 ./src/app_test.py
+
+  Editor-Conf-Check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Install Editor-Conf-Checker
+        run: pip install editorconfig-checker
+
+      - name: Editor-Conf Check
+        run: ec -version
+
+  MarkdownFilesCheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Markdown File Link Check
+        uses: ruzickap/action-my-markdown-link-checker@v1.1.2
 
 
-
-  test:
-   runs-on: ubuntu-latest
-
-   steps:
-    # Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    # Set up Python environment
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9  # Версията на Python може да бъде променена, ако е необходимо
-
-    # Install dependencies
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip install -r src/requirements.txt
-
-    # Run unit tests
-    - name: Run Unit Tests
-      run: |
-        python3 -m unittest discover -s src -p "app_test.py"
+  UnitTest:
+    runs-on: ubuntu-latest
+    needs: [Flake8Test, Editor-Conf-Check, MarkdownFilesCheck]
+    steps:
+     - name: Prepare repo
+       uses: actions/checkout@master
+       
+     - name : Set up Python
+       uses: actions/setup-python@v1
+       
+     - name: install requirements
+       run: pip3 install -r src/requirements.txt
+       
+     - name: Test
+       run: python3 -m unittest src/app_test.py
+  
