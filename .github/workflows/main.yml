@@ -65,5 +65,5 @@ jobs:
        run: pip3 install -r src/requirements.txt
        
      - name: Test
-       run: python3 -m unittest src/app_test.py
+       run: python3 -m unittest ./src/app_test.py
   
