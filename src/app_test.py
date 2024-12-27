@@ -6,6 +6,7 @@ import werkzeug
 if not hasattr(werkzeug, '__version__'):
     werkzeug.__version__ = "2.0.0"  # Можеш да зададеш фиктивна стойност
 
+
 class TestApp(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
@@ -13,7 +14,10 @@ class TestApp(unittest.TestCase):
     def test_hello_world(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Hello! I am a Flask application", response.get_data(as_text=True))
+        self.assertIn(
+            "Hello! I am a Flask application",
+            response.get_data(as_text=True),
+        )
 
 
 if __name__ == "__main__":
