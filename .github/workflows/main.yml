@@ -16,7 +16,24 @@ jobs:
 
       - name: Run Flake8 checks
         run: flake8 src/app_test.py
-    
+
+
+    UnitTest:
+     runs-on: ubuntu-latest
+     needs: [Flake8Test, Editor-Conf-Check, MarkdownFilesCheck]
+     steps:
+     - name: Prepare repo
+       uses: actions/checkout@master
+       
+     - name : Set up Python
+       uses: actions/setup-python@v1
+       
+     - name: install requirements
+       run: pip3 install -r src/requirements.txt
+       
+     - name: Test
+       run: python3 -m unittest src/app_test.py
+
   test:
    runs-on: ubuntu-latest
 
